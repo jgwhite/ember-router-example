@@ -1,17 +1,17 @@
 // The app's namespace.
-var App = Em.Application.create();
+var App = Ember.Application.create();
 
-// The app's top-level controller.
-App.ApplicationController = Em.Controller.extend();
+// App controller and view - every app needs these.
+App.ApplicationController = Ember.Controller.extend();
+App.ApplicationView = Ember.View.extend({ templateName: 'application' });
 
-// The app's top-level view.
-App.ApplicationView = Em.View.extend({ templateName: 'application' });
+// Home controller and view.
+App.HomeController = Ember.Controller.extend();
+App.HomeView = Ember.View.extend({ templateName: 'home' });
 
-// Displays the home template.
-App.HomeView = Em.View.extend({ templateName: 'home' });
-
-// Presents the `authenticated` property.
-App.AuthController = Em.Controller.extend({
+// Auth controller and view.
+// AuthController presents the `authenticated` property.
+App.AuthController = Ember.Controller.extend({
 
   authenticated: function() {
     return this.get('email') === 'ember@example.org'
@@ -19,21 +19,19 @@ App.AuthController = Em.Controller.extend({
   }.property('email', 'password')
 
 });
-
-// Displays the sign-in form.
-App.AuthView = Em.View.extend({
+App.AuthView = Ember.View.extend({
   tagName: 'form',
   templateName: 'auth',
   classNames: 'form-inline well well-large'
 });
 
 // An extended TextField, which recognises autofocus as a property.
-App.TextField = Em.TextField.extend({
+App.TextField = Ember.TextField.extend({
   attributeBindings: ['type', 'value', 'size', 'autofocus']
 });
 
 // Responsible for moving through the different states of the app.
-App.Router = Em.Router.extend({
+App.Router = Ember.Router.extend({
 
   // When the `authenticated` state of the authController singleton
   // changes, the router will transition to the corresponding state.
@@ -46,14 +44,14 @@ App.Router = Em.Router.extend({
   }.observes('authController.authenticated'),
 
   // The initial state for the router, contains every other.
-  root: Em.Route.extend({
+  root: Ember.Route.extend({
 
     // Routes available to the app in its authenticated state.
-    authenticated: Em.Route.extend({
+    authenticated: Ember.Route.extend({
       initialState: 'home',
 
       // Displays the home view.
-      home: Em.Route.extend({
+      home: Ember.Route.extend({
         route: '/home',
         connectOutlets: function(router) {
           router.get('applicationController').connectOutlet('home');
@@ -63,11 +61,11 @@ App.Router = Em.Router.extend({
     }),
 
     // Routes available to the app in its unauthenticated state.
-    unauthenticated: Em.Route.extend({
+    unauthenticated: Ember.Route.extend({
       initialState: 'auth',
 
       // Displays the sign-in form.
-      auth: Em.Route.extend({
+      auth: Ember.Route.extend({
         route: '/auth',
         connectOutlets: function(router) {
           router.get('applicationController').connectOutlet('auth');
